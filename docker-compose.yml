@@ -1,0 +1,18 @@
+# docker-compose.yml
+version: '3.8'
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: streetpulse_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: streetpulse_db
+      POSTGRES_USER: streetpulse_user
+      POSTGRES_PASSWORD: streetpulse_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

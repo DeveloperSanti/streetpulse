@@ -1,0 +1,768 @@
+{
+  "info": {
+    "name": "StreetPulse API",
+    "_postman_id": "streetpulse-api-v1",
+    "description": "Colección completa de la StreetPulse API.\n\n**Cómo usar:**\n1. Importa esta colección en Postman\n2. Ejecuta primero '01 - Registrar Usuario (Carlos)' — guardará el token automáticamente\n3. Todos los endpoints protegidos ya tendrán el token configurado\n\n**Variables disponibles:**\n- `base_url` → http://localhost:3000/v1\n- `access_token` → se llena automáticamente al hacer login/register\n- `refresh_token` → se llena automáticamente al hacer login/register\n- `user_id` → ID del usuario autenticado\n- `user2_id` → ID del segundo usuario (para retos)\n- `vehicle_id` → ID del vehículo creado\n- `vehicle2_id` → ID del vehículo del segundo usuario\n- `challenge_id` → ID del reto creado\n- `notification_id` → ID de la primera notificación",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000/v1", "type": "string" },
+    { "key": "access_token", "value": "", "type": "string" },
+    { "key": "refresh_token", "value": "", "type": "string" },
+    { "key": "access_token_2", "value": "", "type": "string" },
+    { "key": "refresh_token_2", "value": "", "type": "string" },
+    { "key": "user_id", "value": "", "type": "string" },
+    { "key": "user2_id", "value": "", "type": "string" },
+    { "key": "vehicle_id", "value": "", "type": "string" },
+    { "key": "vehicle2_id", "value": "", "type": "string" },
+    { "key": "challenge_id", "value": "", "type": "string" },
+    { "key": "notification_id", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "HEALTH CHECK",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/health", "host": ["http://localhost:3000"], "path": ["health"] },
+            "description": "Verifica que el servidor esté corriendo. No requiere autenticación."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AUTH",
+      "item": [
+        {
+          "name": "01 - Registrar Usuario (Carlos)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data) {",
+                  "  pm.collectionVariables.set('access_token', res.data.accessToken);",
+                  "  pm.collectionVariables.set('refresh_token', res.data.refreshToken);",
+                  "  pm.collectionVariables.set('user_id', res.data.user.id);",
+                  "  console.log('Token guardado para Carlos:', res.data.user.username);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"carlos_piloto\",\n  \"email\": \"carlos@example.com\",\n  \"password\": \"MiPassword123!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] },
+            "description": "Registra al usuario Carlos.\n\nRespuesta automática: guarda access_token, refresh_token y user_id en variables de colección."
+          },
+          "response": []
+        },
+        {
+          "name": "02 - Registrar Usuario 2 (Juan)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data) {",
+                  "  pm.collectionVariables.set('access_token_2', res.data.accessToken);",
+                  "  pm.collectionVariables.set('refresh_token_2', res.data.refreshToken);",
+                  "  pm.collectionVariables.set('user2_id', res.data.user.id);",
+                  "  console.log('Token guardado para Juan:', res.data.user.username);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"juan_racer\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"JuanPass456!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] },
+            "description": "Registra al segundo usuario Juan. Guarda access_token_2, refresh_token_2 y user2_id."
+          },
+          "response": []
+        },
+        {
+          "name": "03 - Login (Carlos)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data) {",
+                  "  pm.collectionVariables.set('access_token', res.data.accessToken);",
+                  "  pm.collectionVariables.set('refresh_token', res.data.refreshToken);",
+                  "  pm.collectionVariables.set('user_id', res.data.user.id);",
+                  "  console.log('Login exitoso:', res.data.user.username);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"carlos@example.com\",\n  \"password\": \"MiPassword123!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] },
+            "description": "Inicia sesión con Carlos. Actualiza access_token y refresh_token automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "04 - Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data) {",
+                  "  pm.collectionVariables.set('access_token', res.data.accessToken);",
+                  "  pm.collectionVariables.set('refresh_token', res.data.refreshToken);",
+                  "  console.log('Tokens renovados exitosamente');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/refresh", "host": ["{{base_url}}"], "path": ["auth", "refresh"] },
+            "description": "Renueva el accessToken usando el refreshToken. Usa la variable {{refresh_token}} automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "05 - Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/logout", "host": ["{{base_url}}"], "path": ["auth", "logout"] },
+            "description": "Cierra la sesión de Carlos. Invalida el refreshToken en la BD."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "USERS",
+      "item": [
+        {
+          "name": "06 - Mi Perfil (GET /me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/users/me", "host": ["{{base_url}}"], "path": ["users", "me"] },
+            "description": "Devuelve el perfil completo del usuario autenticado (Carlos)."
+          },
+          "response": []
+        },
+        {
+          "name": "07 - Actualizar Perfil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zona_ciudad\": \"Miami\",\n  \"zona_estado\": \"Florida\",\n  \"zona_pais\": \"USA\",\n  \"zona_localidad\": \"Brickell\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/users/me", "host": ["{{base_url}}"], "path": ["users", "me"] },
+            "description": "Actualiza la zona geográfica y datos opcionales del perfil. Todos los campos son opcionales."
+          },
+          "response": []
+        },
+        {
+          "name": "08 - Listar Pilotos Disponibles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/users?page=1&limit=10&rango=D",
+              "host": ["{{base_url}}"],
+              "path": ["users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "rango", "value": "D", "description": "Filtrar por rango: S, A, B, C, D" },
+                { "key": "ciudad", "value": "Miami", "description": "Filtrar por ciudad", "disabled": true }
+              ]
+            },
+            "description": "Lista todos los pilotos activos. Filtra por rango D. Puedes activar el filtro 'ciudad' descomentándolo."
+          },
+          "response": []
+        },
+        {
+          "name": "09 - Perfil Público de Juan",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/users/{{user2_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user2_id}}"]
+            },
+            "description": "Devuelve el perfil público de Juan (sin email ni contraseña). Requiere ejecutar primero el registro de Juan."
+          },
+          "response": []
+        },
+        {
+          "name": "10 - Retos de un Usuario",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/challenges?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}", "challenges"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Lista todos los retos de Carlos (como retador o retado)."
+          },
+          "response": []
+        },
+        {
+          "name": "11 - Eliminar Cuenta",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"MiPassword123!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/users/me", "host": ["{{base_url}}"], "path": ["users", "me"] },
+            "description": "CUIDADO: Elimina la cuenta permanentemente. Requiere confirmar contraseña."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "VEHICLES",
+      "item": [
+        {
+          "name": "12 - Listar Mis Vehículos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/vehicles", "host": ["{{base_url}}"], "path": ["vehicles"] },
+            "description": "Lista todos los vehículos de Carlos."
+          },
+          "response": []
+        },
+        {
+          "name": "13 - Agregar Vehículo (Carlos)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data) {",
+                  "  pm.collectionVariables.set('vehicle_id', res.data.id);",
+                  "  console.log('Vehículo de Carlos guardado:', res.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_vehiculo\": \"auto\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"GR Supra\",\n  \"anio\": 2023,\n  \"placa\": \"CAR1234\",\n  \"color\": \"Rojo Intenso\",\n  \"modificaciones\": \"Turbo mejorado, escape deportivo\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/vehicles", "host": ["{{base_url}}"], "path": ["vehicles"] },
+            "description": "Agrega un Toyota Supra para Carlos. El vehículo se crea INACTIVO. Guarda vehicle_id automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "14 - Agregar Vehículo (Juan)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data) {",
+                  "  pm.collectionVariables.set('vehicle2_id', res.data.id);",
+                  "  console.log('Vehículo de Juan guardado:', res.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token_2}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_vehiculo\": \"auto\",\n  \"marca\": \"Honda\",\n  \"modelo\": \"Civic Si\",\n  \"anio\": 2022,\n  \"placa\": \"HON5678\",\n  \"color\": \"Azul Marino\",\n  \"modificaciones\": \"Suspensión mejorada\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/vehicles", "host": ["{{base_url}}"], "path": ["vehicles"] },
+            "description": "Agrega un Honda Civic para Juan (mismo tipo: auto). Guarda vehicle2_id automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "15 - Ver Vehículo por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/vehicles/{{vehicle_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles", "{{vehicle_id}}"]
+            },
+            "description": "Devuelve los detalles del vehículo de Carlos."
+          },
+          "response": []
+        },
+        {
+          "name": "16 - Actualizar Vehículo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"Negro Mate\",\n  \"modificaciones\": \"Turbo mejorado, escape deportivo, frenos Brembo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vehicles/{{vehicle_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles", "{{vehicle_id}}"]
+            },
+            "description": "Actualiza el color y las modificaciones del Toyota Supra de Carlos."
+          },
+          "response": []
+        },
+        {
+          "name": "17 - Activar Vehículo (Carlos)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/vehicles/{{vehicle_id}}/activate",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles", "{{vehicle_id}}", "activate"]
+            },
+            "description": "Activa el Toyota Supra de Carlos. IMPORTANTE: Desactiva todos sus otros vehículos. Necesario para poder enviar retos."
+          },
+          "response": []
+        },
+        {
+          "name": "18 - Activar Vehículo (Juan)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token_2}}" }],
+            "url": {
+              "raw": "{{base_url}}/vehicles/{{vehicle2_id}}/activate",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles", "{{vehicle2_id}}", "activate"]
+            },
+            "description": "Activa el Honda Civic de Juan. Necesario para que Juan pueda recibir retos."
+          },
+          "response": []
+        },
+        {
+          "name": "19 - Eliminar Vehículo",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/vehicles/{{vehicle_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles", "{{vehicle_id}}"]
+            },
+            "description": "Elimina el vehículo de Carlos. CUIDADO: Requiere crear uno nuevo para poder retar."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CHALLENGES",
+      "item": [
+        {
+          "name": "20 - Enviar Reto (Carlos → Juan)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data) {",
+                  "  pm.collectionVariables.set('challenge_id', res.data.id);",
+                  "  console.log('Reto creado:', res.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"retado_id\": \"{{user2_id}}\",\n  \"vehiculo_retador_id\": \"{{vehicle_id}}\",\n  \"tipo_carrera\": \"cuarto_milla\",\n  \"ubicacion_acordada\": \"Avenida 5ta y Calle 10, Miami\",\n  \"fecha_acordada\": \"2026-12-31T18:30:00Z\",\n  \"notas\": \"Mejor preparación gana, buena suerte\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/challenges", "host": ["{{base_url}}"], "path": ["challenges"] },
+            "description": "Carlos reta a Juan. Pre-requisitos:\n1. Ambos registrados (pasos 1 y 2)\n2. Carlos tiene vehículo activo (paso 17)\n3. Juan tiene vehículo activo (paso 18)\n4. Mismo rango (ambos empiezan en D)\n5. Mismo tipo de vehículo (ambos: auto)\n\nGuarda challenge_id automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "21 - Listar Mis Retos (Carlos)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/challenges?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["challenges"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Lista todos los retos donde Carlos es retador o retado."
+          },
+          "response": []
+        },
+        {
+          "name": "22 - Ver Detalle del Reto",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/challenges/{{challenge_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "{{challenge_id}}"]
+            },
+            "description": "Muestra los detalles completos del reto actual. Solo pueden verlo los participantes."
+          },
+          "response": []
+        },
+        {
+          "name": "23 - Aceptar Reto (Juan acepta)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token_2}}" }],
+            "url": {
+              "raw": "{{base_url}}/challenges/{{challenge_id}}/accept",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "{{challenge_id}}", "accept"]
+            },
+            "description": "Juan acepta el reto de Carlos. Estado: pendiente → aceptado. Carlos recibirá notificación automática."
+          },
+          "response": []
+        },
+        {
+          "name": "24 - Rechazar Reto (Juan rechaza) [alternativa al 23]",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token_2}}" }],
+            "url": {
+              "raw": "{{base_url}}/challenges/{{challenge_id}}/reject",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "{{challenge_id}}", "reject"]
+            },
+            "description": "Juan rechaza el reto. Estado: pendiente → rechazado (estado final). Usar este O el anterior (aceptar), no ambos."
+          },
+          "response": []
+        },
+        {
+          "name": "25 - Cancelar Reto (Carlos cancela) [alternativa al 23]",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/challenges/{{challenge_id}}/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "{{challenge_id}}", "cancel"]
+            },
+            "description": "Carlos cancela su reto. Solo funciona en estado pendiente o aceptado. Pierde su racha de victorias consecutivas."
+          },
+          "response": []
+        },
+        {
+          "name": "26 - Iniciar Reto (cualquier participante)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/challenges/{{challenge_id}}/start",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "{{challenge_id}}", "start"]
+            },
+            "description": "Inicia el reto. Estado: aceptado → en_curso. Pre-requisito: Juan aceptó el reto (paso 23)."
+          },
+          "response": []
+        },
+        {
+          "name": "27 - Registrar Resultado (Carlos registra)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ganador_id\": \"{{user_id}}\",\n  \"notas_resultado\": \"Salida limpia, Carlos mantuvo la ventaja todo el tiempo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/challenges/{{challenge_id}}/result",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "{{challenge_id}}", "result"]
+            },
+            "description": "Carlos registra que él ganó. Estado sigue en_curso hasta que Juan confirme. Juan recibe notificación."
+          },
+          "response": []
+        },
+        {
+          "name": "28 - Confirmar Resultado (Juan confirma)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token_2}}" }],
+            "url": {
+              "raw": "{{base_url}}/challenges/{{challenge_id}}/confirm",
+              "host": ["{{base_url}}"],
+              "path": ["challenges", "{{challenge_id}}", "confirm"]
+            },
+            "description": "Juan confirma el resultado. Como ambos confirmaron: estado → completado. Se actualizan victorias/derrotas/rango automáticamente. Si Carlos llega a 3 victorias consecutivas, ¡asciende de rango!"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "NOTIFICATIONS",
+      "item": [
+        {
+          "name": "29 - Listar Notificaciones (Juan)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.data && res.data.data.length > 0) {",
+                  "  pm.collectionVariables.set('notification_id', res.data.data[0].id);",
+                  "  console.log('Primera notificación guardada:', res.data.data[0].id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token_2}}" }],
+            "url": {
+              "raw": "{{base_url}}/notifications?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["notifications"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Muestra las notificaciones de Juan (debería tener 'Recibiste un reto de carlos_piloto'). Guarda notification_id automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "30 - Notificaciones No Leídas (Juan)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token_2}}" }],
+            "url": {
+              "raw": "{{base_url}}/notifications/unread-count",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "unread-count"]
+            },
+            "description": "Devuelve el conteo de notificaciones no leídas. Útil para el badge de notificaciones en la UI."
+          },
+          "response": []
+        },
+        {
+          "name": "31 - Marcar Notificación como Leída",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token_2}}" }],
+            "url": {
+              "raw": "{{base_url}}/notifications/{{notification_id}}/read",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "{{notification_id}}", "read"]
+            },
+            "description": "Marca la primera notificación de Juan como leída."
+          },
+          "response": []
+        },
+        {
+          "name": "32 - Marcar Todas como Leídas",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token_2}}" }],
+            "url": {
+              "raw": "{{base_url}}/notifications/read-all",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "read-all"]
+            },
+            "description": "Marca TODAS las notificaciones de Juan como leídas de una vez."
+          },
+          "response": []
+        },
+        {
+          "name": "33 - Eliminar Notificación",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token_2}}" }],
+            "url": {
+              "raw": "{{base_url}}/notifications/{{notification_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "{{notification_id}}"]
+            },
+            "description": "Elimina una notificación específica de Juan."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RANKS Y CATEGORIAS",
+      "item": [
+        {
+          "name": "34 - Listar Rangos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/ranks", "host": ["{{base_url}}"], "path": ["ranks"] },
+            "description": "Lista los 5 rangos disponibles (S, A, B, C, D) con su nombre y requisitos."
+          },
+          "response": []
+        },
+        {
+          "name": "35 - Leaderboard Global",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/ranks/global-leaderboard?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["ranks", "global-leaderboard"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            },
+            "description": "Lista los mejores pilotos de todos los rangos. Ordenados por victorias descendente."
+          },
+          "response": []
+        },
+        {
+          "name": "36 - Leaderboard por Rango (D)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/ranks/D/leaderboard?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["ranks", "D", "leaderboard"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Lista los mejores pilotos del Rango D. Cambia 'D' por S, A, B, o C para ver otros rangos."
+          },
+          "response": []
+        },
+        {
+          "name": "37 - Listar Categorías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] },
+            "description": "Lista las categorías de vehículos. No requiere autenticación. Pre-cargadas por el seed."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "FLUJO COMPLETO (secuencia sugerida para demo)",
+      "item": [
+        {
+          "name": "ORDEN SUGERIDO PARA DEMO",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:3000/health", "host": ["http://localhost:3000"], "path": ["health"] },
+            "description": "FLUJO COMPLETO PARA DEMO:\n\n1. Health Check\n2. Registrar Carlos (guarda tokens automáticamente)\n3. Registrar Juan (guarda tokens automáticamente)\n4. Agregar vehículo Carlos (guarda vehicle_id)\n5. Agregar vehículo Juan (guarda vehicle2_id)\n6. Activar vehículo Carlos\n7. Activar vehículo Juan\n8. Carlos envía reto (guarda challenge_id)\n9. Juan ve notificaciones (guarda notification_id)\n10. Juan acepta reto\n11. Carlos inicia reto\n12. Carlos registra resultado (Carlos ganó)\n13. Juan confirma resultado → RETO COMPLETADO\n14. Ver leaderboard global\n\nRepite pasos 8-13 tres veces seguidas y en el tercer confirm verás que Carlos asciende a Rango C!"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
