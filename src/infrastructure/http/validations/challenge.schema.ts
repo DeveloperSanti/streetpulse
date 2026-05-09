@@ -14,7 +14,6 @@ export const acceptChallengeSchema = z.object({
 });
 
 export const registerResultSchema = z.object({
-  challengeId: z.string().uuid(),
   ganador_id: z.string().uuid(),
   notas_resultado: z.string().optional(),
 });
