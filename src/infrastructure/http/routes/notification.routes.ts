@@ -78,7 +78,7 @@ router.get('/notifications/unread-count', authMiddleware, NotificationController
  *         required: true
  *         schema: { type: string, format: uuid }
  *     responses:
- *      200:
+ *       200:
  *         description: Notificación marcada como leída
  *         content:
  *           application/json:

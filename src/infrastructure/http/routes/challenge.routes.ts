@@ -71,7 +71,7 @@ router.get('/challenges', authMiddleware, ChallengeController.listChallenges);
  *                 - type: object
  *                   properties:
  *                     data:
- *                       $ref: '#/components/schemas/Challengo'
+ *                       $ref: '#/components/schemas/Challenge'
  *       400:
  *         $ref: '#/components/responses/ValidationError'
  *       401:
@@ -119,7 +119,7 @@ router.get('/challenges/:id', authMiddleware, ChallengeController.getChallenge);
 /**
  * @openapi
  * /challenges/{id}/accept:
- *   get:
+ *   patch:
  *     tags: [Challenges]
  *     summary: Acepta un reto pendiente
  *     security:
