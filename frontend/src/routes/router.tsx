@@ -7,6 +7,8 @@ import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import DashboardPage from '@/pages/DashboardPage';
 import ProfilePage from '@/pages/ProfilePage';
+import VehiclesPage from '@/pages/VehiclesPage';
+import ChallengesPage from '@/pages/ChallengesPage';
 import ProtectedRoute from '@/routes/ProtectedRoute';
 import PublicOnlyRoute from '@/routes/PublicOnlyRoute';
 
@@ -33,6 +35,8 @@ const router = createBrowserRouter([
           { path: '/dashboard', element: <DashboardPage /> },
           { path: '/me', element: <ProfilePage self /> },
           { path: '/users/:id', element: <ProfilePage /> },
+          { path: '/vehicles', element: <VehiclesPage /> },
+          { path: '/challenges', element: <ChallengesPage /> },
         ],
       },
     ],

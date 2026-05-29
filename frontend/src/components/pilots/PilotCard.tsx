@@ -10,11 +10,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { RankBadge } from './RankBadge';
+import { SendChallengeDialog } from '@/components/challenges/SendChallengeDialog';
+import { useAuthStore } from '@/stores/auth.store';
 import type { User } from '@/shared/types';
 
 export function PilotCard({ pilot }: { pilot: User }) {
+  const me = useAuthStore((s) => s.user);
   const initials = pilot.username?.slice(0, 2).toUpperCase() ?? '?';
   const ciudad = pilot.zona_ciudad ?? '—';
+  const isSelf = pilot.id === me?.id;
 
   return (
     <Card>
@@ -41,9 +45,16 @@ export function PilotCard({ pilot }: { pilot: User }) {
         <Button asChild variant="outline" size="sm" className="flex-1">
           <Link to={`/users/${pilot.id}`}>Ver perfil</Link>
         </Button>
-        <Button size="sm" className="flex-1" disabled>
-          Retar
-        </Button>
+        {!isSelf && (
+          <SendChallengeDialog
+            pilot={pilot}
+            trigger={
+              <Button size="sm" className="flex-1">
+                Retar
+              </Button>
+            }
+          />
+        )}
       </CardFooter>
     </Card>
   );

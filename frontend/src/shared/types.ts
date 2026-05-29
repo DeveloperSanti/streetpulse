@@ -17,4 +17,11 @@ export type EstadoChallenge = NonNullable<Challenge['estado']>;
 
 export type ApiSuccess<T> = SuccessResponse & { data?: T };
 
+export type Paginated<T> = {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+};
+
 export type { components, paths };

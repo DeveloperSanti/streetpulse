@@ -1,5 +1,11 @@
 import { http } from './http';
-import type { ApiSuccess, User, Rango, Challenge } from '@/shared/types';
+import type {
+  ApiSuccess,
+  User,
+  Rango,
+  Challenge,
+  Paginated,
+} from '@/shared/types';
 
 export type ListPilotsParams = {
   page?: number;
@@ -20,8 +26,8 @@ export type UpdateProfileInput = {
 export const usersApi = {
   listAvailablePilots: (params: ListPilotsParams = {}) =>
     http
-      .get<ApiSuccess<User[]>>('/users', { params })
-      .then((r) => r.data.data ?? []),
+      .get<ApiSuccess<Paginated<User>>>('/users', { params })
+      .then((r) => r.data.data?.data ?? []),
   getMe: () =>
     http.get<ApiSuccess<User>>('/users/me').then((r) => r.data.data as User),
   updateProfile: (data: UpdateProfileInput) =>
@@ -37,6 +43,8 @@ export const usersApi = {
     params: { page?: number; limit?: number } = {}
   ) =>
     http
-      .get<ApiSuccess<Challenge[]>>(`/users/${id}/challenges`, { params })
-      .then((r) => r.data.data ?? []),
+      .get<ApiSuccess<Paginated<Challenge>>>(`/users/${id}/challenges`, {
+        params,
+      })
+      .then((r) => r.data.data?.data ?? []),
 };
