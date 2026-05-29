@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma';
 import { emitToUser } from '../lib/socket';
+import { SocketEvents } from '../infrastructure/websockets/socket.events';
 import { AppError, ErrorCodes } from '../shared/errors';
 
 const RANGO_SIGUIENTE: Record<string, string | null> = {
@@ -85,7 +86,7 @@ export async function sendChallenge(retador_id: string, data: any) {
     },
   });
 
-  emitToUser(data.retado_id, 'CHALLENGE_RECEIVED', { challengeId: challenge.id });
+  emitToUser(data.retado_id, SocketEvents.CHALLENGE_RECEIVED, { challengeId: challenge.id });
   return challenge;
 }
 
@@ -107,7 +108,7 @@ export async function acceptChallenge(challengeId: string, userId: string) {
       referencia_tipo: 'challenge',
     },
   });
-  emitToUser(challenge.retador_id, 'CHALLENGE_ACCEPTED', { challengeId });
+  emitToUser(challenge.retador_id, SocketEvents.CHALLENGE_ACCEPTED, { challengeId });
   return updated;
 }
 
@@ -129,7 +130,7 @@ export async function rejectChallenge(challengeId: string, userId: string) {
       referencia_tipo: 'challenge',
     },
   });
-  emitToUser(challenge.retador_id, 'CHALLENGE_REJECTED', { challengeId });
+  emitToUser(challenge.retador_id, SocketEvents.CHALLENGE_REJECTED, { challengeId });
   return updated;
 }
 
@@ -154,7 +155,7 @@ export async function cancelChallenge(challengeId: string, userId: string) {
       referencia_tipo: 'challenge',
     },
   });
-  emitToUser(challenge.retado_id, 'CHALLENGE_CANCELLED', { challengeId });
+  emitToUser(challenge.retado_id, SocketEvents.CHALLENGE_CANCELLED, { challengeId });
 }
 
 export async function startChallenge(challengeId: string, userId: string) {
@@ -199,7 +200,7 @@ export async function registerResult(challengeId: string, userId: string, ganado
       referencia_tipo: 'challenge',
     },
   });
-  emitToUser(otroUserId, 'CHALLENGE_RESULT_PENDING', { challengeId });
+  emitToUser(otroUserId, SocketEvents.CHALLENGE_RESULT_PENDING, { challengeId });
   return updated;
 }
 
@@ -240,7 +241,7 @@ export async function confirmResult(challengeId: string, userId: string) {
         await prisma.notification.create({
           data: { user_id: challenge.ganador_id, tipo: 'rank_upgraded', mensaje: `¡Felicidades! Subiste al rango ${nuevoRango}` },
         });
-        emitToUser(challenge.ganador_id, 'RANK_UPGRADED', { nuevoRango });
+        emitToUser(challenge.ganador_id, SocketEvents.RANK_UPGRADED, { nuevoRango });
       }
 
       await prisma.notification.create({
@@ -252,7 +253,7 @@ export async function confirmResult(challengeId: string, userId: string) {
           referencia_tipo: 'challenge',
         },
       });
-      emitToUser(challenge.ganador_id, 'CHALLENGE_COMPLETED', { challengeId });
+      emitToUser(challenge.ganador_id, SocketEvents.CHALLENGE_COMPLETED, { challengeId });
     }
 
     if (perdedor) {
@@ -269,7 +270,7 @@ export async function confirmResult(challengeId: string, userId: string) {
           referencia_tipo: 'challenge',
         },
       });
-      emitToUser(perdedor_id, 'CHALLENGE_COMPLETED', { challengeId });
+      emitToUser(perdedor_id, SocketEvents.CHALLENGE_COMPLETED, { challengeId });
     }
   }
 
